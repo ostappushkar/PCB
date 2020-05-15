@@ -326,3 +326,5 @@ const NumberOfNonZeroNeighbors = (x, y, s) => {
   if (s[x + 1][y - 1]) count++;
   return count;
 };
+
+const splitImage = () => {};
