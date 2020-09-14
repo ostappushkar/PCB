@@ -9,6 +9,9 @@ import Box from "@material-ui/core/Box";
 import Skeleton from "./components/Skeleton";
 import PCB from "./components/PCB";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+import "shards-ui/dist/css/shards.min.css";
+
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
 
@@ -43,7 +46,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <AppBar position="static" color="default">
+        <PCB />
+        {/* <AppBar position="static" color="default">
           <Tabs
             value={this.state.tabIndex}
             indicatorColor="primary"
@@ -59,7 +63,7 @@ class App extends Component {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
           <PCB />
-        </TabPanel>
+        </TabPanel> */}
       </div>
     );
   }

@@ -3,3 +3,13 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+button {
+  margin: 20px;
+}
+
+input {
+  margin-top: 10px;
+}
+.card {
+  margin-bottom: 20px;
+}

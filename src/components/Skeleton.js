@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import Paper from "@material-ui/core/Paper";
+
 import Slider from "@material-ui/core/Slider";
 import { Grayscale, Auth, Threshold, ZhangSuenThinning } from "../services";
-
+import { ZhangSuen } from "../zhangsuen";
 class Skeleton extends Component {
   constructor(props) {
     super(props);
@@ -55,8 +55,10 @@ class Skeleton extends Component {
     var ctx = c.getContext("2d");
     let img = document.getElementById("image");
     ctx.drawImage(img, 0, 0);
-    Threshold(c, ctx, 100);
-    ZhangSuenThinning(c, ctx);
+    //Threshold(c, ctx, 100);
+    const thin = new ZhangSuen();
+    thin.init(c, ctx);
+    //ZhangSuenThinning(c, ctx);
   };
   imageAuthorization = () => {
     var c = document.getElementById("canvas");

@@ -116,12 +116,9 @@ const base = [
     [1, 0, 1],
   ],
 ];
-export const Auth = (c, context) => {
-  console.log("Canvas width: " + c.width);
-  console.log("Canvas height: " + c.height);
+export const Auth = (c, context, cb) => {
   let imageData = context.getImageData(0, 0, c.width, c.height);
   let data = imageData.data;
-  console.log(data);
   var pixelMatrix = [];
   for (let i = 0; i < data.length; i += 4) {
     if (data[i] && data[i + 1] && data[i + 2]) {
@@ -130,13 +127,14 @@ export const Auth = (c, context) => {
       pixelMatrix.push(0);
     }
   }
-  console.log(pixelMatrix);
   var newArray = [];
   while (pixelMatrix.length > 0) {
     newArray.push(pixelMatrix.splice(0, c.width));
   }
   var cHeight = c.height;
   var cWidth = c.width;
+  let endCenters = [];
+  let switchCenters = [];
   for (let y = 3; y < cHeight - 3; y++)
     for (let x = 3; x < cWidth - 3; x++)
       for (let i = 0; i < 21; i++)
@@ -151,49 +149,26 @@ export const Auth = (c, context) => {
           newArray[y + 1][x] == base[i][2][1] &&
           newArray[y + 1][x + 1] == base[i][2][2]
         ) {
-          console.log("ping!");
           if (i >= 0 && i < 5) {
             context.beginPath();
-            context.lineWidth = "2";
+            context.arc(x, y, 6, 0, 2 * Math.PI);
             context.strokeStyle = "red";
-            context.rect(x - 5, y - 5, 10, 10);
+            context.lineWidth = 2;
+            context.closePath();
             context.stroke();
-            /*                   if (ends)
-                                 { 
-                                         Form1->Status->Lines->Add("Ending at ["+varToStr(x)+";"+varToStr(y)+"]...");
-                                         Form1->OutI->Canvas->Brush->Color=clRed;
-                                         Bmp2->Canvas->Pen->Color=clRed;
-                                         Bmp2->Canvas->MoveTo(x-5,y-5);
-                                         Bmp2->Canvas->LineTo(x+5,y-5);
-                                         Bmp2->Canvas->MoveTo(x+5,y-5);
-                                         Bmp2->Canvas->LineTo(x+5,y+5);
-                                         Bmp2->Canvas->MoveTo(x+5,y+5);
-                                         Bmp2->Canvas->LineTo(x-5,y+5);
-                                         Bmp2->Canvas->MoveTo(x-5,y+5);
-                                         Bmp2->Canvas->LineTo(x-5,y-5);
-                                 }  */
+            endCenters.push({ x: x, y: y });
           } else {
             context.beginPath();
-            context.lineWidth = "2";
+            context.arc(x, y, 6, 0, 2 * Math.PI);
             context.strokeStyle = "blue";
-            context.rect(x - 5, y - 5, 10, 10);
+            context.lineWidth = 2;
+
+            context.closePath();
             context.stroke();
+            switchCenters.push({ x: x, y: y });
           }
-          /*                         if (switches)
-                                 {
-                                         Form1->Status->Lines->Add("Switch at ["+varToStr(x)+";"+varToStr(y)+"]...");
-                                         Form1->OutI->Canvas->Brush->Color=clBlue;
-                                         Bmp2->Canvas->Pen->Color=clBlue;
-                                         Bmp2->Canvas->MoveTo(x-5,y-5);
-                                         Bmp2->Canvas->LineTo(x+5,y-5);
-                                         Bmp2->Canvas->MoveTo(x+5,y-5);
-                                         Bmp2->Canvas->LineTo(x+5,y+5);
-                                         Bmp2->Canvas->MoveTo(x+5,y+5);
-                                         Bmp2->Canvas->LineTo(x-5,y+5);
-                                         Bmp2->Canvas->MoveTo(x-5,y+5);
-                                         Bmp2->Canvas->LineTo(x-5,y-5);
-                                } */
         }
+  cb(endCenters, switchCenters);
 };
 
 export const Threshold = (c, context, threshold) => {
@@ -215,18 +190,15 @@ export const ZhangSuenThinning = (c, context) => {
   console.log(data);
   var pixelMatrix = [];
   for (let i = 0; i < data.length; i += 4) {
-    if (data[i] && data[i + 1] && data[i + 2]) {
-      pixelMatrix.push(1);
-    } else {
-      pixelMatrix.push(0);
-    }
+    pixelMatrix[i / 4] =
+      data[i] < 50 && data[i + 1] < 50 && data[i + 2] < 50 ? 1 : 0;
   }
   console.log(pixelMatrix);
   var newArray = [];
   while (pixelMatrix.length > 0) {
     newArray.push(pixelMatrix.splice(0, c.width));
   }
-
+  console.log(newArray[0]);
   var temp = [...newArray];
   var count = 0;
   do {
@@ -326,5 +298,3 @@ const NumberOfNonZeroNeighbors = (x, y, s) => {
   if (s[x + 1][y - 1]) count++;
   return count;
 };
-
-const splitImage = () => {};
