@@ -7,7 +7,6 @@
   "main": "./public/electron.js",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.9.13",
     "concurrently": "^5.2.0",
     "electron-is-dev": "^1.2.0",
     "react": "^16.13.1",
